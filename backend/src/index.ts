@@ -8,8 +8,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+io.on('connect', () => {
+    console.log('EVENT!')
+})
+
 app.use(router);
 
 server.listen(PORT, () => {
     console.log('Backend listening on port:', PORT);
 });
+

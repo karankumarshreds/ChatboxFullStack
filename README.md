@@ -1,14 +1,19 @@
 #### CLIENT
 
 > npm install next react-router-dom 
+
 > npm install @zeit/next-css
+
 > npm install socket.io-client react-scroll-to-bottom react-emoji query-string
 
 #### BACKEND 
 
 > npm install ts-node-dev typescript express @types/express
+
 > npm i @types/node
+
 > tsc --init 
+
 > npm install cors socket.io @types/socket.io
 
 
