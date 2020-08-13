@@ -1,6 +1,6 @@
 #### CLIENT
 
-> npm install next react-router-dom 
+> npm install next react react-router
 
 > npm install @zeit/next-css
 
@@ -17,7 +17,7 @@
 > npm install cors socket.io @types/socket.io
 
 
-#### note: 
+#### SOCKETS: 
 Websocket is a full-duplex communication channel. Socket.io is built on top of that. It adds additional metadata to each packet.
 This is why we cannot use Websocket client with socket.io backend or vice versa.
 

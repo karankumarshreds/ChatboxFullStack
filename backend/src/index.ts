@@ -8,9 +8,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-io.on('connect', () => {
-    console.log('EVENT!')
-})
+io.on('connect', socket => {
+    console.log('Connection logged (backend)');
+    socket.on('disconnect', () => {
+        console.log('Connection disconnected (backend)')
+    });
+});
 
 app.use(router);
 
