@@ -5,7 +5,7 @@ export const initialState = {
     room: ''
 }
 
-const reducer = (state, action) => {
+export const reducer = (state, action) => {
     console.log("Calling action", action);
     switch (action.type) {
         case types.SET_NAME:

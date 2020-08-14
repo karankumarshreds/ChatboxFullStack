@@ -1,19 +1,23 @@
+
 import DataProvider from "../context/DataProvider";
 import { initialState } from '../reducers/index';
-import reducer from '../reducers';
+import { reducer } from '../reducers';
+
 
 const AppComponent = ({ Component, pageProps }) => {
-    <DataProvider intialState={initialState} reducer={reducer}>
-        <Component />
-    </DataProvider>
+    return (
+        <DataProvider intialState={initialState} reducer={reducer}>
+            <Component {...pageProps} />
+        </DataProvider>
+    )
 }
 
-AppComponent.getInitialProps = async (context) => {
-    const pageProps = {};
-    if (context.Component.getInitialProps) {
-        pageProps = await context.Component.getInitialProps(context.ctx);
+AppComponent.getInitialProps = async (appContext) => {
+    let pageProps = {};
+    if (appContext.Component.getInitialProps) {
+        pageProps = await appContext.Component.getInitialProps(appContext.ctx);
     }
-    return { ...pageProps }
+    return { pageProps }
 }
 
 export default AppComponent;
