@@ -34,6 +34,10 @@ io.on('connection', socket => {
             user: 'admin',
             text: `${data.user!.name} has joined the chat...`
         });
+        io.to(data.user!.room).emit('roomData', {
+            room: data.user!.room,
+            users: getUsersInRoom(data.user!.room)
+        })
     });
 
     /** We are assuming 'sendMessage' events are related to 
@@ -60,6 +64,7 @@ io.on('connection', socket => {
     // ON DISCONNECT 
     socket.on('disconnect', () => {
         console.log('Connection disconnected (backend)')
+        removeUser(socket.id)
     });
 
 });

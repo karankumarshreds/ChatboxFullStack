@@ -3,6 +3,7 @@ import { DataContext } from '../context/DataProvider';
 import io from 'socket.io-client';
 import { useContext } from 'react';
 import ChatHeader from '../components/ChatHeader';
+import Messages from '../components/Messages';
 
 let socket;
 
@@ -46,12 +47,12 @@ const Chat = ({ karan }) => {
         })
         setMessage('')
     }
-    console.log('MESSAGES ARRAY', messages);
-
+    // console.log('MESSAGES =', messages)
     return (
         <div>
             <h1>Chat</h1>
             <ChatHeader room={room} />
+            <Messages messages={messages} name={name} />
             <form onSubmit={(e) => sendMessage(e)}>
                 <input value={message} onChange={e => setMessage(e.target.value)} />
                 <button type="submit">Send message</button>
