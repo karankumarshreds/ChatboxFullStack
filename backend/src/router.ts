@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-
 const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-    res.send('Server is up');
+router.all('/api/chat', (req: Request, res: Response) => {
+    res.send({ connected: true });
 });
+
 
 export { router };

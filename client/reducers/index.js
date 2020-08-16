@@ -11,7 +11,7 @@ export const reducer = (state, action) => {
         case types.SET_NAME:
             return { ...state, name: action.name }
         case types.SET_ROOM:
-            return { ...state, name: action.room }
+            return { ...state, room: action.room }
         default:
             return state;
     }
