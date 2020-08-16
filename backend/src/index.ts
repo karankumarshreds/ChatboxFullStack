@@ -14,25 +14,45 @@ import { addUser, removeUser, getUser, getUsersInRoom } from './chat-functions';
 io.on('connection', socket => {
 
     // RECIEVE DATA ON 'JOIN' CHANNEL
-    socket.on('join', ({ name, room }, callback) => {
-        console.log('PARAM RECIEVED ON BACKEND', name, room);
+    socket.on('join', ({ name, room }, callback: (params: any) => void) => {
+        console.log('PARAMS RECIEVED ON BACKEND', name, room);
         const data = addUser({ id: socket.id, name, room });
         if (data.error) {
-            return callback(data.error)
+            // will be recieved on the client side 
+            return callback({ error: data.error })
         }
         socket.join(data.user!.room);
-        /** We are assuming 'message' events are related to admin and will be generated on the backend */
-        socket.emit('message', { user: 'admin', text: `${data.user!.name} welcome to the chat...` });
-        socket.broadcast.to(data.user!.room).emit('message', { user: 'admin', text: `${data.user!.name} has joined the chat...` });
-        // will show the errors on the client side
-        // callback();
-    })
-    /** We are assuming 'sendMessage' events are related to users and will be coming from the client side */
-    socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id);
-        socket.to(user!.room).emit('message', { user: user!.name, text: message });
-        callback();
-    })
+        /** We are assuming 'message' events are related 
+         * to admin and will be generated on the backend */
+        socket.emit('message', {
+            user: 'admin',
+            text: `${data.user!.name} welcome to the chat...`
+        });
+        /** Notifies everyone in the group except the user 
+         * who has joined */
+        socket.broadcast.to(data.user!.room).emit('message', {
+            user: 'admin',
+            text: `${data.user!.name} has joined the chat...`
+        });
+    });
+
+    /** We are assuming 'sendMessage' events are related to 
+     * users and will be coming from the client side */
+    socket.on('sendMessage', (message, callback: (params: any) => void) => {
+        console.log('USER MESSAGE RECIEVED AS', message);
+        const data = getUser(socket.id);
+        if (data.error) {
+            return callback({ error: data.error })
+        }
+        // since we are emitting the message to particular room
+        // this pushes the message recieved into the group and is 
+        // recieved by the frontend on 'message' channel 
+        io.to(data.user!.room).emit('message', {
+            user: data.user!.name,
+            text: message
+        });
+    });
+
     // ON ERROR 
     socket.on('error', () => {
         console.log('Error!');

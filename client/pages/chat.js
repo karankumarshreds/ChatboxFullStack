@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { DataContext } from '../context/DataProvider';
 import io from 'socket.io-client';
 import { useContext } from 'react';
+import ChatHeader from '../components/ChatHeader';
 
 let socket;
 
@@ -16,38 +17,41 @@ const Chat = ({ karan }) => {
         socket = io(BACKEND_URI);
 
         // SEND DATA TO BACKEND ON 'JOIN' CHANNEL
-        console.log('TRYING TO JOIN THE ROOM')
-        socket.emit('join', { name, room });
+        socket.emit('join', { name, room }, ({ error }) => {
+            console.log('RECIEVED AN ERROR FROM THE BACKEND WHILE JOINING :', error);
+        });
+
+        // LISTEN ON FOR MESSAGES ON 'MESSAGE' CHANNEL
+        socket.on('message', (adminMessage) => {
+            console.log(`ADDING NEW MESSAGE "${adminMessage.text}" TO MESSAGES`)
+            setMessages(messages => [...messages, adminMessage])
+        })
 
         // WHILE UNMOUNTING
         return () => {
             socket.emit('disconnect');
             socket.off();
+            console.log('DISCONNECTING THE ROOM')
         }
-    }, [name, room]);
-
-    useEffect(() => {
-        socket.on('message', (adminMessage) => {
-            setMessages([...messages, adminMessage])
-        })
-    }, [messages]);
+    }, [BACKEND_URI]);
 
     const sendMessage = (e) => {
         e.preventDefault();
         if (message.trim() === '') {
             return false;
         }
-        // callback is defined and invoked in the backend (arg #3)
-        socket.emit('sendMessage', message, () => {
-            setMessage('');
+        // CALLBACK DEFINED IN THE BACKEND LISTENER
+        socket.emit('sendMessage', message, ({ error }) => {
+            console.log('RECIEVED AN ERROR FROM THE BACKEND WHILE JOINING :', error)
         })
+        setMessage('')
     }
-
-    console.log(message, messages);
+    console.log('MESSAGES ARRAY', messages);
 
     return (
         <div>
             <h1>Chat</h1>
+            <ChatHeader room={room} />
             <form onSubmit={(e) => sendMessage(e)}>
                 <input value={message} onChange={e => setMessage(e.target.value)} />
                 <button type="submit">Send message</button>

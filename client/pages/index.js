@@ -1,5 +1,15 @@
+import Link from 'next/link';
+
 const LandingPage = () => {
-    return <h1>Landing page </h1>
+    return <div>
+
+        <h1>Start chatting </h1>
+        click
+        <Link href="/join">
+            <a>here</a>
+        </Link>
+    </div>
+
 }
 
 export default LandingPage;

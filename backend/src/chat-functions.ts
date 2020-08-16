@@ -17,7 +17,7 @@ export const addUser = (params: UserParams) => {
     }
     const user = { id, name, room };
     users.push(user);
-    return { user: user };
+    return { user };
 }
 
 export const removeUser = (id: string) => {
@@ -29,7 +29,11 @@ export const removeUser = (id: string) => {
 }
 
 export const getUser = (id: string) => {
-    return users.find(user => user.id === id);
+    const user = users.find(user => user.id === id);
+    if (!user) {
+        return { error: 'User not found' }
+    }
+    return { user }
 }
 
 export const getUsersInRoom = (room: string) => {
