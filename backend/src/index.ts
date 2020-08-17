@@ -15,7 +15,6 @@ io.on('connection', socket => {
 
     // RECIEVE DATA ON 'JOIN' CHANNEL
     socket.on('join', ({ name, room }, callback: (params: any) => void) => {
-        console.log('PARAMS RECIEVED ON BACKEND', name, room);
         const data = addUser({ id: socket.id, name, room });
         if (data.error) {
             // will be recieved on the client side 
@@ -43,7 +42,6 @@ io.on('connection', socket => {
     /** We are assuming 'sendMessage' events are related to 
      * users and will be coming from the client side */
     socket.on('sendMessage', (message, callback: (params: any) => void) => {
-        console.log('USER MESSAGE RECIEVED AS', message);
         const data = getUser(socket.id);
         if (data.error) {
             return callback({ error: data.error })

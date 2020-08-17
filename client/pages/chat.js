@@ -7,7 +7,7 @@ import Messages from '../components/Messages';
 
 let socket;
 
-const Chat = ({ karan }) => {
+const Chat = () => {
     const BACKEND_URI = 'http://localhost:5000';
     const [{ name, room }, dispatch] = useContext(DataContext);
 
@@ -22,12 +22,6 @@ const Chat = ({ karan }) => {
             console.log('RECIEVED AN ERROR FROM THE BACKEND WHILE JOINING :', error);
         });
 
-        // LISTEN ON FOR MESSAGES ON 'MESSAGE' CHANNEL
-        socket.on('message', (adminMessage) => {
-            console.log(`ADDING NEW MESSAGE "${adminMessage.text}" TO MESSAGES`)
-            setMessages(messages => [...messages, adminMessage])
-        })
-
         // WHILE UNMOUNTING
         return () => {
             socket.emit('disconnect');
@@ -35,6 +29,14 @@ const Chat = ({ karan }) => {
             console.log('DISCONNECTING THE ROOM')
         }
     }, [BACKEND_URI]);
+
+    useEffect(() => {
+        // LISTEN ON FOR MESSAGES ON 'MESSAGE' CHANNEL
+        socket.on('message', (recievedMessage) => {
+            console.log(`ADDING NEW MESSAGE "${recievedMessage.text}" TO MESSAGES`)
+            setMessages(messages => [...messages, recievedMessage])
+        })
+    }, []);
 
     const sendMessage = (e) => {
         e.preventDefault();
@@ -59,10 +61,6 @@ const Chat = ({ karan }) => {
             </form>
         </div>
     )
-}
-
-Chat.getInitialProps = async (ctx) => {
-    return { karan: 'karan' }
 }
 
 export default Chat;

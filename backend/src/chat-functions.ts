@@ -9,7 +9,7 @@ const users: UserParams[] = [];
 export const addUser = (params: UserParams) => {
     let { id, name, room } = params;
     name = name.trim().toLowerCase();
-    room = name.trim().toLowerCase();
+    room = room.trim().toLowerCase();
     // if the user already exists in the room
     const existinguser = users.find(user => user.room === room && user.name === name);
     if (existinguser) {
